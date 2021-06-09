@@ -4,9 +4,12 @@ using UnityEngine;
 
 public class PlayerController : MonoBehaviour
 {
-  public float horizontalInput;
-  public float speed = 20.0f;
-  public float xRange = 20.0f;
+  public Transform projectileSpawnPoint;
+  private float horizontalInput;
+  private float verticalInput;
+  private float speed = 40.0f;
+  private float xRange = 20.0f;
+  private float zRange = 20.0f;
 
   public GameObject projectilePrefab;
 
@@ -23,6 +26,7 @@ public class PlayerController : MonoBehaviour
   {
 
 
+
     if (transform.position.x < -xRange)
     {
       transform.position = new Vector3(-xRange, transform.position.y, transform.position.z);
@@ -32,15 +36,25 @@ public class PlayerController : MonoBehaviour
     {
       transform.position = new Vector3(xRange, transform.position.y, transform.position.z);
     }
+    if (transform.position.z > zRange)
+    {
+      transform.position = new Vector3(transform.position.x, transform.position.y, zRange);
+    }
 
+    if (transform.position.z < 0)
+    {
+      transform.position = new Vector3(transform.position.x, transform.position.y, 0);
+    }
 
     horizontalInput = Input.GetAxis("Horizontal");
+    verticalInput = Input.GetAxis("Vertical");
     transform.Translate(Vector3.right * speed * horizontalInput * Time.deltaTime);
+    transform.Translate(Vector3.forward * speed * verticalInput * Time.deltaTime);
 
     if (Input.GetKeyDown(KeyCode.Space))
     {
       //  Launch the projecitle of food
-      Instantiate(projectilePrefab, transform.position, projectilePrefab.transform.rotation);
+      Instantiate(projectilePrefab, projectileSpawnPoint.position, projectilePrefab.transform.rotation);
     }
   }
 
